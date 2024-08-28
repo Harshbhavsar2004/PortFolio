@@ -1,0 +1,132 @@
+/* Container equivalent */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    align-items: center;
+
+  }
+  
+  /* Wrapper equivalent */
+  .wrapper {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1100px;
+    gap: 12px;
+  }
+  
+  @media (max-width: 960px) {
+    .wrapper {
+      flex-direction: column;
+    }
+  }
+  
+  /* Title equivalent */
+  .title {
+    font-size: 52px;
+    text-align: center;
+    font-weight: 600;
+    margin-top: 20px;
+    color: white; /* Replace with theme.text_primary */
+  }
+  
+  @media (max-width: 768px) {
+    .title {
+      margin-top: 12px;
+      font-size: 32px;
+    }
+  }
+  
+  /* Description equivalent */
+  .desc {
+    font-size: 18px;
+    text-align: center;
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: #555; /* Replace with theme.text_secondary */
+  }
+  
+  @media (max-width: 768px) {
+    .desc {
+      font-size: 16px;
+    }
+  }
+  
+  /* Contact Form equivalent */
+  .contact-form {
+    width: 95%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(17, 25, 40, 0.83);
+    border: 1px solid rgba(255, 255, 255, 0.125);
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: rgba(23, 92, 230, 0.1) 0px 4px 24px;
+    margin-top: 28px;
+    gap: 12px;
+    
+  }
+  
+  /* Contact Title equivalent */
+  .contact-title {
+    font-size: 28px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: white; /* Replace with theme.text_primary */
+  }
+  
+  /* Contact Input equivalent */
+  .contact-input {
+    flex: 1;
+    background-color: transparent;
+    border: 1px solid rgba(85, 85, 85, 0.5); /* Replace with theme.text_secondary + 50 */
+    outline: none;
+    font-size: 18px;
+    color: #ffffff; /* Replace with theme.text_primary */
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  
+  .contact-input:focus {
+    border: 1px solid #1a73e8; /* Replace with theme.primary */
+  }
+  
+  /* Contact Input Message equivalent */
+  .contact-input-message {
+    flex: 1;
+    background-color: transparent;
+    border: 1px solid rgba(85, 85, 85, 0.5); /* Replace with theme.text_secondary + 50 */
+    outline: none;
+    font-size: 18px;
+    color: #dfdbdb; /* Replace with theme.text_primary */
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  
+  .contact-input-message:focus {
+    border: 1px solid #1a73e8; /* Replace with theme.primary */
+  }
+  
+  /* Contact Button equivalent */
+  .contact-button {
+    width: 100%;
+    text-decoration: none;
+    text-align: center;
+    background: hsla(271, 100%, 50%, 1);
+    padding: 13px 16px;
+    margin-top: 2px;
+    border-radius: 12px;
+    border: none;
+    color: #fff; /* Replace with theme.text_primary */
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
