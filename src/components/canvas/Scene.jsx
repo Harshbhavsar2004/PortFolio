@@ -200,8 +200,8 @@ function Model() {
   return (
     <>
       <Html style={{
-        marginTop: "-300px",
-        marginLeft: "-500px"
+        marginTop: "-250px",
+        marginLeft: "-550px"
       }}>
         <HeroLeftContainer>
           <motion.div {...headTextAnimation}>
