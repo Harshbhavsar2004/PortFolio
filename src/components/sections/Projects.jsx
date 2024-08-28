@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { projects } from "../../data/constants";
 import ProjectCard from "../cards/ProjectCard";
+import { motion, useAnimation, useInView } from "framer-motion";
 
+// Styled components (unchanged)
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  justify-contnet: center;
+  justify-content: center;
   margin-top: 50px;
   padding: 0px 16px;
-  position: rlative;
+  position: relative;
   z-index: 1;
   align-items: center;
 `;
@@ -27,6 +29,7 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
+
 const Title = styled.div`
   font-size: 52px;
   text-align: center;
@@ -38,6 +41,7 @@ const Title = styled.div`
     font-size: 32px;
   }
 `;
+
 const Desc = styled.div`
   font-size: 18px;
   text-align: center;
@@ -54,12 +58,13 @@ const ToggleButtonGroup = styled.div`
   color: ${({ theme }) => theme.primary};
   font-size: 16px;
   border-radius: 12px;
-font-weight 500;
-margin: 22px 0;
-@media (max-width: 768px){
+  font-weight: 500;
+  margin: 22px 0;
+  @media (max-width: 768px) {
     font-size: 12px;
-}
+  }
 `;
+
 const ToggleButton = styled.div`
   padding: 8px 18px;
   border-radius: 6px;
@@ -77,6 +82,7 @@ const ToggleButton = styled.div`
   background:  ${theme.primary + 20};
   `}
 `;
+
 const Divider = styled.div`
   width: 1.5px;
   background: ${({ theme }) => theme.primary};
@@ -90,29 +96,50 @@ const CardContainer = styled.div`
   flex-wrap: wrap;
 `;
 
+// Animation Variants
+const animationVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: { opacity: 1, y: 0 },
+};
+
 const Projects = () => {
   const [toggle, setToggle] = useState("all");
+
   return (
     <Container id="Projects">
       <Wrapper>
         <Title>Projects</Title>
-        <Desc
-          style={{
-            marginBottom: "40px",
-          }}
-        >
-          I have worked on a wide range of projects. From web apps to android
-          apps. Here are some of my projects.
+        <Desc style={{ marginBottom: "40px" }}>
+          I have worked on a wide range of projects. From web apps to android apps. Here are some of my projects.
         </Desc>
 
         <CardContainer>
-          {toggle === "all" &&
-            projects.map((project) => <ProjectCard key={project} project={project} />)}
           {projects
-            .filter((item) => item.category === toggle)
-            .map((project) => (
-              <ProjectCard key={project} project={project} />
-            ))}
+            .filter((project) => toggle === "all" || project.category === toggle)
+            .map((project, index) => {
+              const controls = useAnimation();
+              const ref = React.useRef(null);
+              const inView = useInView(ref, { once: true });
+
+              React.useEffect(() => {
+                if (inView) {
+                  controls.start("visible");
+                }
+              }, [inView, controls]);
+
+              return (
+                <motion.div
+                  ref={ref}
+                  key={project.id} // Assuming `project` has a unique `id`
+                  initial="hidden"
+                  animate={controls}
+                  variants={animationVariants}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                  <ProjectCard project={project} />
+                </motion.div>
+              );
+            })}
         </CardContainer>
       </Wrapper>
     </Container>

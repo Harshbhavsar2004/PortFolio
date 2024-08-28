@@ -2,13 +2,15 @@ import React from "react";
 import styled from "styled-components";
 import { skills } from "../../data/constants";
 import { Tilt } from "react-tilt";
+import { motion, useAnimation, useInView } from "framer-motion";
 
+// Styled components (unchanged)
 const Container = styled.div`
-  margin-top:150px;
+  margin-top: 150px;
   display: flex;
   flex-direction: column;
-  justify-contnet: center;
-  position: rlative;
+  justify-content: center;
+  position: relative;
   z-index: 1;
   align-items: center;
 `;
@@ -26,6 +28,7 @@ const Wrapper = styled.div`
     flex-direction: column;
   }
 `;
+
 const Title = styled.div`
   font-size: 52px;
   text-align: center;
@@ -37,6 +40,7 @@ const Title = styled.div`
     font-size: 32px;
   }
 `;
+
 const Desc = styled.div`
   font-size: 18px;
   text-align: center;
@@ -68,7 +72,6 @@ const Skill = styled.div`
     max-width: 400px;
     padding: 10px 36px;
   }
-
   @media (max-width: 500px) {
     max-width: 330px;
     padding: 10px 36px;
@@ -90,6 +93,7 @@ const SkillList = styled.div`
   gap: 12px;
   margin-bottom: 20px;
 `;
+
 const SkillItem = styled.div`
   font-size: 16px;
   font-weight: 400;
@@ -101,7 +105,6 @@ const SkillItem = styled.div`
   align-items: center;
   justify-content: center;
   gap: 8px;
-
   @media (max-width: 768px) {
     font-size: 14px;
     padding: 8px 12px;
@@ -111,41 +114,62 @@ const SkillItem = styled.div`
     padding: 6px 12px;
   }
 `;
+
 const SkillImage = styled.img`
   width: 24px;
   height: 24px;
 `;
+
+const animationVariants = {
+  hidden: { opacity: 0, x: -50 },
+  visible: { opacity: 1, x: 0 },
+};
 
 const Skills = () => {
   return (
     <Container id="Skills">
       <Wrapper>
         <Title>Skills</Title>
-        <Desc
-          style={{
-            marginBottom: "40px",
-          }}
-        >
-          Here are some of my skills on which I have been working on for the
-          past 2 years.
+        <Desc style={{ marginBottom: "40px" }}>
+          Here are some of my skills on which I have been working on for the past 2 years.
         </Desc>
 
         <SkillsContainer>
-          {skills.map((skill, index) => (
-            <Tilt key={index} >
-              <Skill key={`skill-${index}`}>
-                <SkillTitle>{skill.title}</SkillTitle>
-                <SkillList>
-                  {skill.skills.map((item, index_x) => (
-                    <SkillItem key={`skill-x-${index_x}`}>
-                      <SkillImage src={item.image} />
-                      {item.name}
-                    </SkillItem>
-                  ))}
-                </SkillList>
-              </Skill>
-            </Tilt>
-          ))}
+          {skills.map((skill, index) => {
+            const controls = useAnimation();
+            const ref = React.useRef(null);
+            const inView = useInView(ref, { once: true });
+
+            React.useEffect(() => {
+              if (inView) {
+                controls.start("visible");
+              }
+            }, [inView, controls]);
+
+            return (
+              <Tilt key={index}>
+                <motion.div
+                  ref={ref}
+                  initial="hidden"
+                  animate={controls}
+                  variants={animationVariants}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
+                >
+                  <Skill>
+                    <SkillTitle>{skill.title}</SkillTitle>
+                    <SkillList>
+                      {skill.skills.map((item, index_x) => (
+                        <SkillItem key={`skill-x-${index_x}`}>
+                          <SkillImage src={item.image} />
+                          {item.name}
+                        </SkillItem>
+                      ))}
+                    </SkillList>
+                  </Skill>
+                </motion.div>
+              </Tilt>
+            );
+          })}
         </SkillsContainer>
       </Wrapper>
     </Container>

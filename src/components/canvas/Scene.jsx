@@ -1,6 +1,6 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Suspense, useRef } from "react";
-import { OrbitControls, useTexture, Html, Sparkles } from "@react-three/drei";
+import { useTexture, Html, Sparkles, Loader } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import "../../App.css";
@@ -9,7 +9,7 @@ import { headTextAnimation, headContentAnimation } from "../../utils/motion";
 import { motion } from "framer-motion";
 import { Bio } from "../../data/constants";
 import TypewriterComponent from "typewriter-effect";
-import HeroBgAnimation from "../HeroBgAnimation";
+
 const HeroLeftContainer = styled.div`
   color:white;
   margin-left:-80px;
@@ -129,120 +129,123 @@ const ResumeButton = styled.a`
   color: white;
 `;
 export default function Scene() {
-    return (
-        <Canvas
-            style={{
-                width: "100vw",
-                height: "100vh"
-            }}
-            shadows
-            flat
-            gl={{ antialias: true }}
-            dpr={[1, 1.5]}
-            camera={{ position: [0, 2, 5], fov: 35 }}
-        >
-            <directionalLight position={[-5, -5, 5]} intensity={4} />
-            <Sparkles count={300} scale={5}/>
-            <Suspense fallback={null}>
-                <EffectComposer>
-                    <Bloom
-                        intensity={3.0}
-                        luminanceThreshold={0}
-                        luminanceSmoothing={0}
-                        mipmapBlur={true}
-                    />
-                </EffectComposer>
-                <Model />
-            </Suspense>
-        </Canvas>
-    );
+  return (
+    <>
+      <Canvas
+        style={{
+          width: "100vw",
+          height: "100vh"
+        }}
+        shadows
+        flat
+        gl={{ antialias: true }}
+        dpr={[1, 1.5]}
+        camera={{ position: [0, 2, 5], fov: 35 }}
+      >
+        <directionalLight position={[-5, -5, 5]} intensity={4} />
+        <Sparkles count={300} scale={5} />
+        <Suspense fallback={null}>
+          <EffectComposer>
+            <Bloom
+              intensity={3.0}
+              luminanceThreshold={0}
+              luminanceSmoothing={0}
+              mipmapBlur={true}
+            />
+          </EffectComposer>
+          <Model />
+        </Suspense>
+      </Canvas>
+      <Loader />
+    </>
+  );
 }
 
 function Model() {
-    const groupRef = useRef(null);
-    const texture = useTexture("./creedi-zhong-cPDYIQ6l65A-unsplas.jpg");
-    const { raycaster, camera, mouse } = useThree();
+  const groupRef = useRef(null);
+  const texture = useTexture("./creedi-zhong-cPDYIQ6l65A-unsplas.jpg");
+  const { raycaster, camera, mouse } = useThree();
 
-    useFrame((state, delta) => {
-        if (groupRef.current) {
-            groupRef.current.rotation.y += delta;
-            groupRef.current.rotation.x += delta / 6;
-        }
-    });
+  useFrame((state, delta) => {
+    if (groupRef.current) {
+      groupRef.current.rotation.y += delta;
+      groupRef.current.rotation.x += delta / 6;
+    }
+  });
 
-    const handleClick = (event) => {
-        raycaster.setFromCamera(mouse, camera);
-        const intersects = raycaster.intersectObject(groupRef.current);
+  const handleClick = (event) => {
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObject(groupRef.current);
 
-        if (intersects.length > 0) {
-            const uv = intersects[0].uv;
-            const url = getURLFromUV(uv);
-            if (url) {
-                window.open(url, "_blank");
-            }
-        }
-    };
+    if (intersects.length > 0) {
+      const uv = intersects[0].uv;
+      const url = getURLFromUV(uv);
+      if (url) {
+        window.open(url, "_blank");
+      }
+    }
+  };
 
-    const getURLFromUV = (uv) => {
-        if (uv.x < 0.33) {
-            return "https://web-examination.vercel.app";
-        } else if (uv.x >= 0.33 && uv.x < 0.66) {
-            return "https://ai-form-builder-wr1c.vercel.app/";
-        } else if (uv.x >= 0.66) {
-            return "https://www.tejaswinisales.shop";
-        }
-        return null;
-    };
+  const getURLFromUV = (uv) => {
+    if (uv.x < 0.33) {
+      return "https://web-examination.vercel.app";
+    } else if (uv.x >= 0.33 && uv.x < 0.66) {
+      return "https://ai-form-builder-wr1c.vercel.app/";
+    } else if (uv.x >= 0.66) {
+      return "https://www.tejaswinisales.shop";
+    }
+    return null;
+  };
 
-    return (
-        <>
-            <Html style={{
-                marginTop: "-300px",
-                marginLeft: "-600px"
-            }}>
-                <HeroLeftContainer>
-                    <motion.div {...headTextAnimation}>
-                        <Title>
-                            Hi, I am <br /> {Bio.name}
-                        </Title>
-                        <TextLoop>
-                            I am a
-                            <Span>
-                                <TypewriterComponent
-                                    options={{
-                                        strings: Bio.roles,
-                                        autoStart: true,
-                                        loop: true,
-                                    }}
-                                />
-                            </Span>
-                        </TextLoop>
-                    </motion.div>
+  return (
+    <>
+      <Html style={{
+        marginTop: "-300px",
+        marginLeft: "-600px"
+      }}>
+        <HeroLeftContainer>
+          <motion.div {...headTextAnimation}>
+            <Title>
+              Hi, I am <br /> {Bio.name}
+            </Title>
+            <TextLoop>
+              I am a
+              <Span>
+                <TypewriterComponent
+                  options={{
+                    strings: Bio.roles,
+                    autoStart: true,
+                    loop: true,
+                  }}
+                />
+              </Span>
+            </TextLoop>
+          </motion.div>
 
-                    <motion.div {...headContentAnimation}>
-                        <SubTitle>{Bio.description}</SubTitle>
-                    </motion.div>
-                    <ResumeButton href={Bio.resume} target="_blank">
-                        Check Resume
-                    </ResumeButton>
-                </HeroLeftContainer>
-            </Html>
+          <motion.div {...headContentAnimation}>
+            <SubTitle>{Bio.description}</SubTitle>
+          </motion.div>
+          <ResumeButton href={Bio.resume} target="_blank">
+            Check Resume
+          </ResumeButton>
+        </HeroLeftContainer>
+      </Html>
 
-            <group
-                position={[1.5, 0.2, 0]}
-                rotation={[Math.PI / 8, -2, 0]}
-                onClick={handleClick}
-            >
-                <mesh ref={groupRef}>
-                    <cylinderGeometry args={[1, 1, 1, 60, 60, true]} />
-                    <meshBasicMaterial
-                        map={texture}
-                        side={THREE.DoubleSide}
-                        transparent={true}
-                        opacity={1}
-                    />
-                </mesh>
-            </group>
-        </>
-    );
+      <group
+        position={[1.5, 0.2, 0]}
+        rotation={[Math.PI / 8, -2, 0]}
+        onClick={handleClick}
+      >
+        <mesh ref={groupRef}>
+          <cylinderGeometry args={[1, 1, 1, 60, 60, true]} />
+          <meshBasicMaterial
+            map={texture}
+            side={THREE.DoubleSide}
+            transparent={true}
+            opacity={1}
+          />
+        </mesh>
+      </group>
+    </>
+  );
 }

@@ -11,6 +11,8 @@ import "./App.css"
 import StartCanvas from "./components/canvas/Stars";
 import Scene from "./components/canvas/Scene";
 import { Loader } from "@react-three/drei";
+import { useEffect, useState } from "react";
+import LoadingScreen from "./components/sections/Loading";
 const Body = styled.div`
   background-color: ${({ theme }) => theme.bg};
   width: 100%;
@@ -35,14 +37,36 @@ const Wrapper = styled.div`
 `;
 
 function App() {
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time (e.g., fetching data or assets)
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // Adjust the time as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  // useEffect(() => {
+  //   if (!isLoading) {
+  //     document.body.style.transition = 'opacity 0.5s ease-in-out';
+  //     document.body.style.opacity = 1;
+  //   } else {
+  //     document.body.style.opacity = 0;
+  //   }
+  // }, [isLoading]);
+  
   return (
     <ThemeProvider theme={darkTheme}>
-      <BrowserRouter>
+      {isLoading && <LoadingScreen />}
+      {!isLoading && <BrowserRouter>
         <Navbar />
         <Body>
-         <StartCanvas/>
+          <StartCanvas />
           <div>
-            <Scene/>
+            <Scene />
             <Wrapper>
               <Skills />
               {/* <Experience /> */}
@@ -55,8 +79,7 @@ function App() {
             <Footer />
           </div>
         </Body>
-      </BrowserRouter>
-      <Loader/>
+      </BrowserRouter>}
     </ThemeProvider>
   );
 }
